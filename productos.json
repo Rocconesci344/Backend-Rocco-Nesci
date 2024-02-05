@@ -1,0 +1,20 @@
+[
+  {
+    "title": "TLOU",
+    "description": "description",
+    "price": "5",
+    "thumbnail": "img1",
+    "code": "22",
+    "id": 1,
+    "stock": "3"
+  },
+  {
+    "title": "Título 2",
+    "description": "Nueva Descripción",
+    "price": "10",
+    "thumbnail": "nueva_img",
+    "code": "99",
+    "id": 2,
+    "stock": "5"
+  }
+]
