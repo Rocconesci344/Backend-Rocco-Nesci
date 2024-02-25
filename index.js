@@ -110,8 +110,7 @@ class ProductManager {
 
 let pr = new ProductManager('products.json');
 pr.exportProductsToFile('exported_products.json');
-pr.addProduct("TLOU", "description","5","img1","3","22")
-pr.addProduct("RDR2", "description2","2","img2","6","55")
+
 
 
 // console.log(pr.getProducts())
@@ -137,9 +136,6 @@ pr.addProduct("RDR2", "description2","2","img2","6","55")
 
 
 // delete
-pr.deleteProduct(5);
 
-console.log('Producto eliminado');
-console.log(pr.getProducts());
 
 module.exports = ProductManager;
