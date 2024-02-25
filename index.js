@@ -109,7 +109,7 @@ class ProductManager {
 
 
 let pr = new ProductManager('products.json');
-pr.exportProductsToFile('exported_products.json');
+pr.exportProductsToFile('/data/exported_products.json');
 
 
 
