@@ -39,10 +39,8 @@ router.post("/", (req, res) => {
 
 router.get("/:cid", (req, res) => {
     let carts = getCarts();
-    let cartId = req.params.cid;
-
+    let cartId = Number(req.params.cid) ;
     let cart = carts.find(c => c.id === cartId);
-
     if (!cart) {
         return res.status(404).json({ error: "Carrito no encontrado" });
     }
