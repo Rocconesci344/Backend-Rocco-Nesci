@@ -38,15 +38,15 @@ router.get("/", (req, res) => {
 });
 
 router.get("/:pid", (req, res) => {
-    let pid = Number(req.params.pid); // Cambio de id a pid
+    let pid = Number(req.params.pid);
     if (isNaN(pid)) {
         return res.status(400).json({ error: "id debe ser numérico" });
     }
 
     let products = getProducts();
-    let product = products.find(u => u.id === pid); // Cambio de id a pid
+    let product = products.find(u => u.id === pid);
     if (!product) {
-        return res.status(400).json({ error: `No existen productos con id ${pid}` }); // Cambio de id a pid
+        return res.status(400).json({ error: `No existen productos con id ${pid}` });
     }
 
     res.setHeader('Content-Type', 'application/json');
@@ -54,7 +54,7 @@ router.get("/:pid", (req, res) => {
 });
 
 router.post("/", (req, res) => {
-    if (!req.body.title || !req.body.description || !req.body.price || !req.body.thumbnail || !req.body.code || !req.body.stock) {
+    if (!req.body.title || !req.body.description || !req.body.price || !req.body.thumbnail || !req.body.code || !req.body.stock || !req.body.status) {
         return res.status(400).json({
             error: "Complete el campo faltante"
         });
@@ -82,21 +82,21 @@ router.post("/", (req, res) => {
 });
 
 router.put("/:pid", (req, res) => {
-    let pid = Number(req.params.pid); // Cambio de id a pid
+    let pid = Number(req.params.pid);
     if (isNaN(pid)) {
         return res.status(400).json({ error: "id debe ser numérico" });
     }
 
     let products = getProducts();
-    let productIndex = products.findIndex(u => u.id === pid); // Cambio de id a pid
+    let productIndex = products.findIndex(u => u.id === pid);
     if (productIndex === -1) {
-        return res.status(400).json({ error: `No existen productos con id ${pid}` }); // Cambio de id a pid
+        return res.status(400).json({ error: `No existen productos con id ${pid}` });
     }
 
     products[productIndex] = {
         ...products[productIndex],
         ...req.body,
-        id: pid // Cambio de id a pid
+        id: pid
     };
 
     saveProducts(products);
@@ -106,15 +106,15 @@ router.put("/:pid", (req, res) => {
 });
 
 router.delete("/:pid", (req, res) => {
-    let pid = Number(req.params.pid); // Cambio de id a pid
+    let pid = Number(req.params.pid);
     if (isNaN(pid)) {
         return res.status(400).json({ error: "id debe ser numérico" });
     }
 
     let products = getProducts();
-    let indexProduct = products.findIndex(u => u.id === pid); // Cambio de id a pid
+    let indexProduct = products.findIndex(u => u.id === pid);
     if (indexProduct === -1) {
-        return res.status(400).json({ error: `No existen productos con id ${pid}` }); // Cambio de id a pid
+        return res.status(400).json({ error: `No existen productos con id ${pid}` });
     }
 
     let productoEliminado = products[indexProduct];
