@@ -123,7 +123,7 @@ router.delete("/:pid", (req, res) => {
     saveProducts(products);
 
     res.setHeader('Content-Type', 'application/json');
-    return res.status(200).json({ usuarioEliminado: productoEliminado });
+    return res.status(200).json({ productoEliminado: productoEliminado });
 });
 
 export default router;
