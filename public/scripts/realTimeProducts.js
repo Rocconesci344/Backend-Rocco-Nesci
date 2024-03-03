@@ -20,17 +20,16 @@ socket.on('productDeleted', (productId) => {
     });
 });
 
-
 document.getElementById('productForm').addEventListener('submit', (event) => {
     event.preventDefault();
     const productName = document.getElementById('productName').value;
-    socket.emit('addProduct', productName);
+    socket.emit('addProduct', { title: productName });
     document.getElementById('productName').value = '';
 });
 
 document.getElementById('deleteForm').addEventListener('submit', (event) => {
     event.preventDefault();
-    const productIndex = document.getElementById('productIndex').value;
-    socket.emit('deleteProduct', productIndex);
-    document.getElementById('productIndex').value = '';
+    const productId = document.getElementById('productId').value;
+    socket.emit('deleteProduct', productId);
+    document.getElementById('productId').value = '';
 });

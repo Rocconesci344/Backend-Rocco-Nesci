@@ -9,15 +9,15 @@
     <h1>Listado de Productos en Tiempo Real</h1>
     <ul id="productList">
         {{#each products}}
-            <li>{{this}}</li>
+            <li>Title: {{this.title}}, Description: {{this.description}}, Price: {{this.price}}</li>
         {{/each}}
     </ul>
-    <form id="productForm">
-        <input type="text" id="productName" placeholder="Nombre del Producto">
+    <form id="productForm" method="POST">
+        <input type="text" id="productName" name="productName" placeholder="Nombre del Producto">
         <button type="submit">Agregar Producto</button>
     </form>
     <form id="deleteForm">
-        <input type="text" id="productIndex" placeholder="Índice del Producto a Eliminar">
+        <input type="text" id="productId" name="productId" placeholder="ID del Producto a Eliminar">
         <button type="submit">Eliminar Producto</button>
     </form>
     <script type="module" src="/public/scripts/realTimeProducts.js"></script>

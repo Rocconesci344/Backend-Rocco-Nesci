@@ -1,7 +1,7 @@
 import express from 'express';
-import fs from 'fs';
 import path from 'path';
-import {fileURLToPath} from 'url';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -25,17 +25,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/realtimeproducts', (req, res) => {
-    const filePath = path.join(__dirname, '../data/exported_products.json');
-
-    fs.readFile(filePath, 'utf8', (err, data) => {
-        if (err) {
-            console.error('Error al leer el archivo JSON de productos:', err);
-            return res.status(500).send('Error interno del servidor');
-        }
-        const products = JSON.parse(data);
-
-        res.render('realTimeProducts', { products });
-    });
+    res.render('realTimeProducts');
 });
 
 export { router };
