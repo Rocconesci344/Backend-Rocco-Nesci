@@ -9,6 +9,10 @@ const __dirname = dirname(__filename);
 
 const router = express.Router();
 
+function getProducts(){
+    return fs.readFileSync("./data/exported_products.json","utf-8");
+}
+
 router.get('/', (req, res) => {
     const filePath = path.join(__dirname, '../data/exported_products.json');
 
@@ -25,7 +29,9 @@ router.get('/', (req, res) => {
 });
 
 router.get('/realtimeproducts', (req, res) => {
-    res.render('realTimeProducts');
+    let products = getProducts();
+    products = JSON.parse(products)
+    res.render("realTimeProducts", { products });
 });
 
 export { router };

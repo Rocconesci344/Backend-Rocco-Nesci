@@ -15,6 +15,7 @@ const io = new Server(server);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+
 app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
 

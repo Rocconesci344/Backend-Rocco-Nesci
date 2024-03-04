@@ -12,14 +12,15 @@
             <li>Title: {{this.title}}, Description: {{this.description}}, Price: {{this.price}}</li>
         {{/each}}
     </ul>
-    <form id="productForm" method="POST">
+    <form id="productForm" method="POST" action="/add-product">
         <input type="text" id="productName" name="productName" placeholder="Nombre del Producto">
         <button type="submit">Agregar Producto</button>
     </form>
-    <form id="deleteForm">
+    <form id="deleteForm" method="POST" action="/delete-product">
         <input type="text" id="productId" name="productId" placeholder="ID del Producto a Eliminar">
         <button type="submit">Eliminar Producto</button>
     </form>
+
     <script type="module" src="/public/scripts/realTimeProducts.js"></script>
 </body>
 </html>

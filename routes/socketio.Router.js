@@ -4,20 +4,16 @@ import { Server } from 'socket.io';
 const socketioRouter = (io) => {
     const router = express.Router();
 
-    router.post('/add-product', (req, res) => {
-        const { productName } = req.body;
+    io.on('connection', (socket) => {
+        socket.on('addProduct', (productName) => {
+            
+            io.emit('productAdded', productName);
+        });
 
-        io.emit('productAdded', productName);
+        socket.on('deleteProduct', (productId) => {
 
-        res.send('Producto agregado con éxito');
-    });
-
-    router.post('/delete-product', (req, res) => {
-        const { productId } = req.body;
-
-        io.emit('productDeleted', productId);
-
-        res.send('Producto eliminado con éxito');
+            io.emit('productDeleted', productId);
+        });
     });
 
     return router;
