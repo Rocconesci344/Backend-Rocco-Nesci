@@ -9,3 +9,5 @@ socket.on('productAdded', (product) => {
     productList.appendChild(listItem);
 });
 
+
+export default socket;

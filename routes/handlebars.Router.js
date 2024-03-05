@@ -15,15 +15,12 @@ function getProducts(){
 
 router.get('/', (req, res) => {
     const filePath = path.join(__dirname, '../data/exported_products.json');
-
     fs.readFile(filePath, 'utf8', (err, data) => {
         if (err) {
             console.error('Error al leer el archivo JSON de productos:', err);
             return res.status(500).send('Error interno del servidor');
         }
-
         const products = JSON.parse(data);
-
         res.render('home', { products });
     });
 });

@@ -106,7 +106,8 @@ router.put("/:pid", (req, res) => {
 });
 
 router.delete("/:pid", (req, res) => {
-    let pid = Number(req.params.pid);
+    let pid = Number(req.params.pid)
+    console.log(req.body);
     if (isNaN(pid)) {
         return res.status(400).json({ error: "id debe ser numérico" });
     }
