@@ -126,4 +126,6 @@ router.delete("/:pid", (req, res) => {
     return res.status(200).json({ productoEliminado: productoEliminado });
 });
 
+
+
 export default router;
