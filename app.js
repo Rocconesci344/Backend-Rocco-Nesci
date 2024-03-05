@@ -6,6 +6,7 @@ import { router as productsRouter } from './routes/products.router.js';
 import { router as handlebarsRouter } from './routes/handlebars.Router.js';
 import socketioRouter from './routes/socketio.Router.js';
 import {engine} from 'express-handlebars';
+import __dirname from './utils.js';
 
 const PORT = 8080;
 const app = express();
@@ -14,6 +15,7 @@ const io = new Server(server);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(__dirname + '/public'));
 
 
 app.engine('handlebars', engine());
