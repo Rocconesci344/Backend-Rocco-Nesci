@@ -7,6 +7,7 @@ import { router as handlebarsRouter } from './routes/handlebars.Router.js';
 import socketioRouter from './routes/socketio.Router.js';
 import {engine} from 'express-handlebars';
 import __dirname from './utils.js';
+import mongoose from 'mongoose';
 
 const PORT = 8080;
 const app = express();
@@ -30,4 +31,12 @@ app.use('/socketio', socketioRouter(io));
 server.listen(PORT, () => {
     console.log(`Servidor escuchando en puerto ${PORT}`);
 });
+
+try {
+    await mongoose.connect('mongodb+srv://rocconesci344:344a2344@rocco-nesci-backend.atqrp5y.mongodb.net/?retryWrites=true&w=majority&appName=Rocco-nesci-backend')
+    console.log(`Conexión a DB establecida`)
+    
+} catch (error) {
+    console.log("Error DB. "+error.message)
+}
 
