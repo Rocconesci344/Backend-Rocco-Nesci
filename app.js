@@ -9,6 +9,7 @@ import {engine} from 'express-handlebars';
 import __dirname from './utils.js';
 import mongoose from 'mongoose';
 
+
 const PORT = 8080;
 const app = express();
 const server = http.createServer(app);
@@ -33,10 +34,10 @@ server.listen(PORT, () => {
 });
 
 try {
-    await mongoose.connect('mongodb+srv://rocconesci344:344a2344@rocco-nesci-backend.atqrp5y.mongodb.net/?retryWrites=true&w=majority&appName=Rocco-nesci-backend')
-    console.log(`Conexión a DB establecida`)
-    
+    await mongoose.connect('mongodb+srv://rocconesci344:344a2344@rocco-nesci-backend.atqrp5y.mongodb.net/?retryWrites=true&w=majority&appName=Rocco-nesci-backend');
+    console.log(`Conexión a DB establecida`);
 } catch (error) {
-    console.log("Error DB. "+error.message)
+    console.log("Error DB. " + error.message);
 }
+
 

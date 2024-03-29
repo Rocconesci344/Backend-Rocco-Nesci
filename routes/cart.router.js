@@ -96,4 +96,57 @@ router.post("/:cid/product/:pid", (req, res) => {
     res.json({ cart });
 });
 
+
+router.delete('/:cid/products/:pid', async (req, res) => {
+    
+    try {
+        const { cid, pid } = req.params;
+
+        res.json({ status: 'success', message: 'Product removed from cart' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ status: 'error', message: 'Internal server error' });
+    }
+});
+
+router.put('/:cid', async (req, res) => {
+    try {
+        const { cid } = req.params;
+        const products = req.body.products;
+
+        res.json({ status: 'success', message: 'Cart updated with new products' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ status: 'error', message: 'Internal server error' });
+    }
+});
+
+router.put('/:cid/products/:pid', async (req, res) => {
+    try {
+        const { cid, pid } = req.params;
+        const { quantity } = req.body;
+
+        res.json({ status: 'success', message: 'Product quantity updated in cart' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ status: 'error', message: 'Internal server error' });
+    }
+});
+
+
+router.delete('/:cid', async (req, res) => {
+    try {
+        const { cid } = req.params;
+
+        res.json({ status: 'success', message: 'All products removed from cart' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ status: 'error', message: 'Internal server error' });
+    }
+});
+
+
+
+
+
 export default router;
