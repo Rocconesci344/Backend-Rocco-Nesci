@@ -39,7 +39,7 @@ function saveProducts(products) {
 // });
 
 
-// En el archivo routes/products.js
+
 
 router.get('/', async (req, res) => {
     try {
