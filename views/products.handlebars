@@ -1,35 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Productos</title>
-</head>
-<body>
-    <h1>Productos</h1>
-    <ul>
-        {{#each products}}
-            <li>
-                <span>{{this.name}}</span>
-                <span>{{this.price}}</span>
-                <span>{{this.category}}</span>
-                <button onclick="addToCart('{{this._id}}')">Agregar al carrito</button>
-            </li>
-        {{/each}}
-    </ul>
-    
-    {{#if prevLink}}
-        <a href="{{prevLink}}">Página anterior</a>
-    {{/if}}
-    {{#if nextLink}}
-        <a href="{{nextLink}}">Página siguiente</a>
-    {{/if}}
+<h1>Lista de productos</h1>
+<ul>
+    {{#each products}}
+    <li>{{this.title}} - {{description}} - $ {{price}} </li>
+    {{/each}}
+</ul>
 
-    <script>
-        function addToCart(productId) {
-            // Lógica para agregar el producto al carrito
-            alert('Producto agregado al carrito');
-        }
-    </script>
-</body>
-</html>
+<a href="/realtimeproducts">Ir a realtimeproducts</a>
+<a href="/">Volver a la home</a>
+<hr>
+
+{{#if hasPrevPage}}
+    <a href="/products?pagina={{prevPage}}">Pag.Ant.</a>
+{{/if}}
+
+{{#if hasNextPage}}
+    <a href="/products?pagina={{nextPage}}">Pag.Sig.</a>
+{{/if}}
+
+<a href="/products?pagina={{totalPages}}">Ult. Pag.</a>
