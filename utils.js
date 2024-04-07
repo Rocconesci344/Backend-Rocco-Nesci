@@ -1,7 +1,8 @@
-import {fileURLToPath} from 'url';
-import { dirname } from 'path';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const crypto = require('crypto');
 
-export default __dirname;
+
+const SECRET = "CoderCoder123";
+const creaHash = password => crypto.createHmac("sha256", SECRET).update(password).digest("hex");
+
+module.exports.creaHash = creaHash;

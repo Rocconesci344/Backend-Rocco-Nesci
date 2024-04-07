@@ -1,34 +1,93 @@
-import express from 'express';
-import path from 'path';
-import fs from 'fs';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+const Router = require('express').Router;
+const ProductManager = require("../managers/productManager")
+const viewsRouter = Router();
+const auth = require('../middlewares/auth');
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const { modeloProductos } = require('../dao/models/productos.modelo'); 
+const { modeloCarts } = require('../dao/models/carts.modelo');
 
-const router = express.Router();
 
-function getProducts(){
-    return fs.readFileSync("./data/exported_products.json","utf-8");
-}
+const productManager = new ProductManager()
 
-router.get('/', (req, res) => {
-    const filePath = path.join(__dirname, '../data/exported_products.json');
-    fs.readFile(filePath, 'utf8', (err, data) => {
-        if (err) {
-            console.error('Error al leer el archivo JSON de productos:', err);
-            return res.status(500).send('Error interno del servidor');
+viewsRouter.get('/', async(req, res) => {
+    res.status(200).render('home');
+});
+
+viewsRouter.get('/products', async(req, res) => {
+    let {pagina}=req.query
+    if(!pagina){
+        pagina=1
+    }
+
+    let {
+        docs:products,
+        totalPages, 
+        prevPage, nextPage, 
+        hasPrevPage, hasNextPage
+    } = await modeloProductos.paginate({},{limit:2, page:pagina, lean:true})
+
+    res.status(200).render('products', { products, totalPages, 
+    prevPage, nextPage, 
+    hasPrevPage, hasNextPage });
+});
+
+viewsRouter.get('/products/:id', async (req, res) => {
+    try {
+        const productId = req.params.id;
+        const product = await modeloProductos.findById(productId).lean();
+        if (!product) {
+            return res.status(404).send('El producto no fue encontrado.');
         }
-        const products = JSON.parse(data);
-        res.render('home', { products });
-    });
+        res.render('singleproduct', { product });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error');
+    }
 });
 
-router.get('/realtimeproducts', (req, res) => {
-    let products = getProducts();
-    products = JSON.parse(products)
-    res.render("realTimeProducts", { products });
+viewsRouter.get('/cart/:id', async (req, res) => {
+    try {
+        const cartId = req.params.id;
+        const cart = await modeloCarts.findById(cartId).populate('products').lean();
+        if (!cart) {
+            return res.status(404).send('El carrito no fue encontrado.');
+        }
+
+        const productsWithDetails = await Promise.all(cart.products.map(async product => {
+            const productDetails = await modeloProductos.findById(product.productId).lean();
+            return {
+                ...product,
+                title: productDetails.title,
+                price: productDetails.price
+            };
+        }));
+
+        res.render('cart', { cart: { ...cart, products: productsWithDetails } });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error');
+    }
 });
 
-export { router };
+viewsRouter.get('/registro',(req,res)=>{
+
+    let {error, mensaje} = req.query
+
+    res.status(200).render('registro', {error, mensaje})
+})
+
+viewsRouter.get('/login',(req,res)=>{
+
+    res.status(200).render('login')
+})
+
+viewsRouter.get('/perfil', auth, (req,res)=>{
+
+    let usuario=req.session.usuario
+
+    res.status(200).render('perfil', {usuario})
+})
+
+
+
+module.exports = viewsRouter 
