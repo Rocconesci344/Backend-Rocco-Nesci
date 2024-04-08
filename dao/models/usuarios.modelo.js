@@ -7,7 +7,11 @@ const usuariosSchema = new mongoose.Schema({
         type: String, unique:true
     }, 
     age: Number,
-    password: String
+    password: String,
+    rango: {
+        type: String,
+        default: 'user'
+    }
 });
 
 const usuariosModelo = mongoose.model('usuarios', usuariosSchema);
