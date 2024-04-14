@@ -1,8 +1,9 @@
+const bcrypt = require('bcrypt');
 
-const crypto = require('crypto');
+const generaHash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+const validaPassword = (password, passwordConHash) => bcrypt.compareSync(password, passwordConHash);
 
-
-const SECRET = "CoderCoder123";
-const creaHash = password => crypto.createHmac("sha256", SECRET).update(password).digest("hex");
-
-module.exports.creaHash = creaHash;
+module.exports = {
+    generaHash,
+    validaPassword
+};
