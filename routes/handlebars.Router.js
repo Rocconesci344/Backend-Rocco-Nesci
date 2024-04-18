@@ -69,17 +69,17 @@ viewsRouter.get('/cart/:id', async (req, res) => {
     }
 });
 
-viewsRouter.get('/registro',(req,res)=>{
 
-    let {error, mensaje} = req.query
+viewsRouter.get('/login', async(req, res) => {
+    let {message, error} = req.query;
+  res.status(200).render('login', {message, error});
+});
 
-    res.status(200).render('registro', {error, mensaje})
-})
+viewsRouter.get('/register', async(req, res) => {
 
-viewsRouter.get('/login',(req,res)=>{
-
-    res.status(200).render('login')
-})
+    let {message, error} = req.query;
+  res.status(200).render('registro', {message, error});
+});
 
 viewsRouter.get('/perfil', auth, (req,res)=>{
 

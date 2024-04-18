@@ -6,33 +6,29 @@ const handlebars = require("express-handlebars")
 const productRouter = require("./routes/products.router")
 const viewsRouter = require('./routes/handlebars.Router')
 const cartRouter = require("./routes/cart.router")
-const sessionsRouter = require('./routes/sessions.router')
-const sessions = require('express-session')
-const MongoStore = require("connect-mongo");
-const { initPassport } = require('./config/passport.config.js');
-const passport = require('passport');
-
+const sessionRouter = require('./routes/sessions.router')
+const session = require('express-session')
+const passport = require("passport");
+const passportConfig = require("./config/passport.config");
+const connectMongo = require("connect-mongo");
 
 const PORT = 8080;
 const app = express();
 const server = http.createServer(app);
 
-app.use(sessions({
-    secret:"CoderCoder123", saveUninitialized:true, resave:true,
-    store: MongoStore.create({
-        mongoUrl: "mongodb+srv://rocconesci344:344a2344@rocco-nesci-backend.atqrp5y.mongodb.net/?retryWrites=true&w=majority&appName=Rocco-nesci-backend",
-        ttl: 60*5
-    })
-}))
-initPassport()
-app.use(passport.initialize())
-app.use(passport.session())
-
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
+app.use(session({
+    secret: "secreto",
+    resave: true,
+    saveUninitialized: true,
+    store: connectMongo.create({mongoUrl: "mongodb+srv://rocconesci344:344a2344@rocco-nesci-backend.atqrp5y.mongodb.net/?retryWrites=true&w=majority&appName=Rocco-nesci-backend"})
+}))
 
-
-app.use(express.static("./src/public"))
+passportConfig()
+app.use(passport.initialize())
+app.use(passport.session())
+app.use(express.static(path.join(__dirname, "public")))
 
 app.engine("handlebars", handlebars.engine({
     runtimeOptions: {
@@ -45,7 +41,7 @@ app.set("view engine", "handlebars")
 app.set("views", path.join(__dirname, "views"))
 
 app.use("/", viewsRouter)
-app.use("/api/sessions", sessionsRouter)
+app.use("/api/sessions", sessionRouter)
 app.use('/api/carts', cartRouter);
 app.use('/api/products', productRouter);
 

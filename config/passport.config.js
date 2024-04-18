@@ -1,110 +1,103 @@
-const passport = require("passport");
-const local = require("passport-local");
-const github = require("passport-github2");
-const { usuarioModelo } = require("../dao/models/usuarios.model.js");
-const { generaHash, validaPassword } = require("../utils.js");
+const passport = require('passport');
+const local = require('passport-local');
+const UserManager = require('../managers/userManager');
+const github = require('passport-github2').Strategy;
+const { userModel } = require("../dao/models/users.modelo");
+const bcrypt = require('bcrypt');
 
-exports.initPassport = () => {
-    passport.use(
-        "registro",
-        new local.Strategy(
-            {
-                usernameField: "email",
-                passReqToCallback: true
-            },
-            async (req, username, password, done) => {
-                try {
-                    let { nombre } = req.body;
-                    if (!nombre) {
-                        return done(null, false);
-                    }
+const userManager = new UserManager();
 
-                    let existe = await usuarioModelo.findOne({ email: username });
-                    if (existe) {
-                        return done(null, false);
-                    }
+const passportConfig = () => {
+  passport.use(
+    "register",
+    new local.Strategy(
+      {
+        usernameField: "email",
+        passReqToCallback: true,
+      },
+      async function (req, email, password, done) {
+        try {
+          const { username, role } = req.body;
 
-                    password = generaHash(password);
+          if (!username || !email || !password) {
+            return done(null, false, { message: "Username, email, and password are required" });
+          }
 
-                    let usuario = await usuarioModelo.create({
-                        nombre,
-                        password,
-                        email: username
-                    });
-                    if (usuario) {
-                        return done(null, usuario);
-                    } else {
-                        return done(null, false);
-                    }
-                } catch (error) {
-                    return done(error);
-                }
-            }
-        )
-    );
+          const userExists = await userManager.getUserByFilter({ email });
+          if (userExists) {
+            return done(null, false, { message: "User already exists" });
+          }
 
-    passport.use(
-        "login",
-        new local.Strategy(
-            {
-                usernameField: "email"
-            },
-            async (username, password, done) => {
-                try {
-                    let usuario = await usuarioModelo.findOne({ email: username });
-                    if (!usuario) {
-                        return done(null, false);
-                    }
+          const hashedPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+          const newUser = await userManager.addUser(username, email, hashedPassword, role);
+          return done(null, newUser);
+        } catch (error) {
+          return done(error);
+        }
+      }
+    )
+  );
 
-                    if (!validaPassword(password, usuario.password)) {
-                        return done(null, false);
-                    }
-
-                    return done(null, usuario);
-                } catch (error) {
-                    return done(error);
-                }
-            }
-        )
-    );
-
-    passport.use(
-        "github",
-        new github.Strategy(
-            {
+        passport.use(
+          "githubLogin",
+            new github(
+              {
                 clientID: "Iv1.f0301997906746ae",
                 clientSecret: "cd7cdeab13c1ca88cfa661cf8b70aab096f6b16c",
-                callbackURL: "http://localhost:8080/api/sessions/callbackGithub"
-            },
-            async (accessToken, refreshToken, profile, done) => {
-                try {
-                    let { name: nombre, email } = profile._json;
-                    if (!email) {
-                        return done(null, false);
-                    }
-                    let usuario = await usuarioModelo.findOne({ email });
-                    if (!usuario) {
-                        usuario = await usuarioModelo.create({
-                            nombre,
-                            email,
-                            profileGithub: profile
-                        });
-                    }
-                    return done(null, usuario);
-                } catch (error) {
-                    return done(error);
+                callbackURL:"http://localhost:8080/api/sessions/githubCallback",
+              },
+              async function(accessToken, refreshToken, profile, done){
+                try{
+                  let name = profile._json.username;
+                  let email = profile._json.email;
+                  let user = await userModel.findOne({email})
+                  if(!user){
+                    user = await userModel.create({name, email, profileGithub: profile})
+                  }
                 }
-            }
+                catch(error){
+                  return done(error);
+                }
+              }
+            )
         )
-    );
-
-    passport.serializeUser((usuario, done) => {
-        return done(null, usuario);
+        
+      passport.use(
+        "login",
+        new local.Strategy(
+          {
+            usernameField: "email"
+          },
+          async (username, password, done) => {
+            try {
+              console.log({username})
+              const user = await userManager.getUserByFilter({email: username });
+              if (!user) {
+                res.setHeader("Content-Type", "application/json");
+                return res.status(401).json({error: "Credenciales incorrectas"});
+              }
+              
+              const validatePassword=(user, password)=>bcrypt.compareSync(password, user.password)
+              if (!validatePassword) {
+                return done(null, false);
+              }
+    
+              return done(null, user);
+            } catch (error) {
+              return done(error);
+            }
+          }
+        )
+      );
+    
+    passport.serializeUser((user, done) => {
+        return done(null, user._id);
     });
-
-    passport.deserializeUser((usuario, done) => {
-        return done(null, usuario);
+    
+    passport.deserializeUser(async (id, done) => {
+            const user = await userManager.getUserByFilter({ _id: id });
+            return done(null, user);
     });
-};
+}
 
-module.exports = passport;
+module.exports = passportConfig;
