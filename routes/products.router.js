@@ -1,76 +1,16 @@
 const Router = require('express').Router;
-const ProductManager = require("../managers/productManager")
-const { modeloProductos } = require('../dao/models/productos.modelo'); 
 const productRouter=Router()
+const ProductController = require('../controller/product.controller');
 
-const productManager = new ProductManager()
+productRouter.get('/', ProductController.getAllProducts);
 
-productRouter.get('/', async (req, res) => {
-    try {
-        const { page = 1, limit = 5 } = req.query;
-        const options = {
-            page: parseInt(page),
-            limit: parseInt(limit)
-        };
-        const products = await modeloProductos.paginate({}, options);
-        res.json(products);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
+productRouter.get('/:id', ProductController.getProductById);
 
-productRouter.get('/:id', async (req, res) => {
-    const productId = req.params.id;
-    try {
-        const product = await productManager.getProductById(productId);
-        res.json(product);
-    } catch (error) {
-        res.status(404).json({ error: 'Producto no encontrado' });
-    }
-});
+productRouter.post('/', ProductController.createProduct);
 
-productRouter.post('/', async (req, res) => {
-    const { title, description, price, thumbnail, code, stock, status, category } = req.body;
+productRouter.put('/:id', ProductController.updateProduct);
 
-    try {
-        const newProduct = await productManager.addProduct(
-            title,
-            description,
-            price,
-            thumbnail,
-            code,
-            stock,
-            status,
-            category
-        );
-        res.status(201).json(newProduct);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
-});
-
-productRouter.put('/:id', async (req, res) => {
-    const productId = req.params.id;
-    const updatedFields = req.body;
-
-    try {
-        const updatedProduct = await productManager.updateProduct(productId, updatedFields);
-        res.json(updatedProduct);
-    } catch (error) {
-        res.status(404).json({ error: 'Producto no encontrado' });
-    }
-});
-
-productRouter.delete('/:id', async (req, res) => {
-    const productId = req.params.id;
-
-    try {
-        await productManager.deleteProduct(productId);
-        res.status(204).end();
-    } catch (error) {
-        res.status(404).json({ error: 'Producto no encontrado' });
-    }
-});
+productRouter.delete('/:id', ProductController.deleteProduct);
 
 
 module.exports = productRouter;
