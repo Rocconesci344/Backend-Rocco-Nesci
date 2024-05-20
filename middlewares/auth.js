@@ -1,9 +1,9 @@
-const auth = (req, res, next) => {
-    if (!req.session.usuario) {
-        res.setHeader('Content-Type', 'application/json');
-        return res.status(401).json({ error: `No hay usuarios autenticados` });
+const authenticate = (req, res, next) => { 
+    if(req.session && req.session.user){
+        next()
+    }else{
+        res.status(401).json({error: 'No autorizado'})
     }
-    next();
-};
+}
 
-module.exports = auth;
+module.exports = authenticate;

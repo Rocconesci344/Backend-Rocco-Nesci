@@ -8,10 +8,10 @@ let userManager = new UserManager();
 const productManager = new ProductManager()
 
 class ViewsController{
-    
     static async getHome(req, res) {
         res.status(200).render('home');
     }
+
     static async getProducts(req, res) {
         let { pagina } = req.query;
         if (!pagina) {
@@ -65,6 +65,7 @@ class ViewsController{
             res.status(500).send('Error al procesar la solicitud.');
         }
     }
+
     static async getCartById(req, res) {
         try {
             const cartId = req.params.id;
@@ -72,6 +73,8 @@ class ViewsController{
             if (!cart) {
                 return res.status(404).send('El carrito no fue encontrado.');
             }
+
+
             const productsWithDetails = await Promise.all(cart.products.map(async product => {
                 const productDetails = await modeloProductos.findById(product.productId).lean();
                 return {
@@ -80,6 +83,7 @@ class ViewsController{
                     price: productDetails.price
                 };
             }));
+
             res.render('cart', { cart: { ...cart, products: productsWithDetails } });
         } catch (error) {
             console.error(error);
@@ -91,11 +95,11 @@ class ViewsController{
         let {message, error} = req.query;
         res.status(200).render('login', {message, error});
     }
+
     static async getRegister(req, res) {
         let {message, error} = req.query;
         res.status(200).render('register', {message, error});
     }
-
 
     static async getProfile(req, res) {
         if (!req.session.user) {

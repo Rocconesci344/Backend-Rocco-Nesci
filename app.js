@@ -14,7 +14,7 @@ const passportConfig = require("./config/passport.config");
 const connectMongo = require("connect-mongo");
 
 
-const PORT = 8080;
+const PORT = 3000;
 const app = express();
 const server = http.createServer(app)
 
@@ -43,7 +43,6 @@ app.engine("handlebars", handlebars.engine({
 app.set("view engine", "handlebars")
 app.set("views", path.join(__dirname, "views"))
 
-//RUTAS
 app.use("/", viewsRouter)
 app.use("/api/products", productRouter)
 app.use("/api/sessions", sessionsRouter)

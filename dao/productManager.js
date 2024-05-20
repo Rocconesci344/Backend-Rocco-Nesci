@@ -42,10 +42,11 @@ const { modeloProductos } = require('./models/productos.modelo');
   }
   async updateProduct(id, updatedFields) {
     try {
+      // Utiliza el método findOneAndUpdate de Mongoose para actualizar un producto por su ID
       const updatedProduct = await modeloProductos.findOneAndUpdate(
         { _id: id },
         updatedFields,
-        { new: true }
+        { new: true } // Devuelve el producto actualizado
       );
       if (!updatedProduct) {
         throw new Error('Producto no encontrado para actualizar');
@@ -59,6 +60,7 @@ const { modeloProductos } = require('./models/productos.modelo');
 
   async deleteProduct(id) {
     try {
+      // Utiliza el método findOneAndDelete de Mongoose para eliminar un producto por su ID
       const deletedProduct = await modeloProductos.findOneAndDelete({ _id: id });
       if (!deletedProduct) {
         throw new Error('Producto no encontrado para eliminar');

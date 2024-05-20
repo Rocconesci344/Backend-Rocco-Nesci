@@ -21,7 +21,6 @@ class CartManager {
             cart.products.push({ productId, quantity: 1 });
         }
         await cart.save();
-
         return cart.products.find(product => product.productId.equals(productId));
     } catch (error) {
         throw new Error('Error al agregar el producto al carrito: ' + error.message);
