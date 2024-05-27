@@ -13,5 +13,7 @@ productRouter.put('/:id', isAdmin, ProductController.updateProduct);
 
 productRouter.delete('/:id', isAdmin, ProductController.deleteProduct);
 
+productRouter.get('/mockingproducts', ProductController.mockProducts)
+
 
 module.exports = productRouter;
