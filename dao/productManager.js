@@ -1,4 +1,5 @@
 const { modeloProductos } = require('./models/productos.modelo');
+const logger = require('../utils/logger');
 
  class ProductManager {
   constructor() {
@@ -36,8 +37,8 @@ const { modeloProductos } = require('./models/productos.modelo');
     try {
         return await modeloProductos.findOne({ _id: id });
     } catch (error) {
-        console.error('Error al obtener el producto por ID:', error);
-        throw error;
+      console.error('Error al obtener el producto por ID:', error);
+      throw error;
     }
   }
   async updateProduct(id, updatedFields) {

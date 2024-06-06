@@ -11,6 +11,8 @@ const socketIO = require("socket.io");
 const session = require("express-session");
 const passport = require("passport");
 const passportConfig = require("./config/passport.config");
+const errorHandler = require('./middlewares/errorHandler');
+const logger = require('./utils/logger');
 const connectMongo = require("connect-mongo");
 
 
@@ -18,6 +20,11 @@ const PORT = 3000;
 const app = express();
 const server = http.createServer(app)
 
+
+app.use((req, res, next) =>{
+    logger.http(`${req.method} - ${req.url}`);
+    next();
+});
 
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
@@ -49,15 +56,15 @@ app.use("/api/sessions", sessionsRouter)
 app.use("/api/carts", cartRouter)
 
 server.listen(PORT, () => {
-    console.log(`Servidor escuchando en puerto ${PORT}`);
-});
+    logger.info(`Servidor escuchando en http://localhost:${PORT}`);
+    });
 
 const connect = async()=>{
     try{
         await mongoose.connect("mongodb+srv://rocconesci344:344a2344@rocco-nesci-backend.atqrp5y.mongodb.net/?retryWrites=true&w=majority&appName=Rocco-nesci-backend")
-        console.log("Conectado a MongoDB")
+        logger.info("Conectado a MongoDB");
     }catch(error){
-        console.error("Error al conectar a MongoDB", error)
+        logger.error(`Error al conectar a MongoDB: ${error.message}`);
     }
 }
 

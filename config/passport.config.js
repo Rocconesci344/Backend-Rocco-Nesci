@@ -4,10 +4,10 @@ const github = require('passport-github2').Strategy;
 const UserManager = require('../dao/userManager');
 const { userModel } = require("../dao/models/users.modelo");
 const bcrypt = require('bcrypt');
+const logger = require('../utils/logger');
+
 
 const userManager = new UserManager();
-
-// REGISTER PASSPORT
 
 const passportConfig = () => {
   passport.use(
@@ -40,7 +40,6 @@ const passportConfig = () => {
     )
   );
 
-      // github
         passport.use(
           "githubLogin",
             new github(
@@ -65,7 +64,6 @@ const passportConfig = () => {
             )
         )
     
-      //  Login
       passport.use(
         "login",
         new local.Strategy(
@@ -74,7 +72,7 @@ const passportConfig = () => {
           },
           async (username, password, done) => {
             try {
-              console.log({username})
+              logger.info(`Login attempt for user ${username}`);           
               const user = await userManager.getUserByFilter({email: username });
               if (!user) {
                 res.setHeader("Content-Type", "application/json");

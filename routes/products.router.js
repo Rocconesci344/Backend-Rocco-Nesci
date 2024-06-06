@@ -9,6 +9,8 @@ productRouter.get('/:id', ProductController.getProductById);
 
 productRouter.post('/', isAdmin, ProductController.createProduct);
 
+productRouter.get('/loggerTest', ProductController.loggerTest)
+
 productRouter.put('/:id', isAdmin, ProductController.updateProduct);
 
 productRouter.delete('/:id', isAdmin, ProductController.deleteProduct);
