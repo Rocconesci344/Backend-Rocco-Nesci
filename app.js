@@ -14,6 +14,8 @@ const passportConfig = require("./config/passport.config");
 const errorHandler = require('./middlewares/errorHandler');
 const logger = require('./utils/logger');
 const connectMongo = require("connect-mongo");
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsDoc = require('swagger-jsdoc');
 
 
 const PORT = 3000;
@@ -54,6 +56,24 @@ app.use("/", viewsRouter)
 app.use("/api/products", productRouter)
 app.use("/api/sessions", sessionsRouter)
 app.use("/api/carts", cartRouter)
+
+const options = {
+    definition: {
+        openapi: "3.0.0",
+        info:{
+            title: "API de Coderhousse",
+            version: "1.0.0",
+            description: "API de Backend para el curso de Coderhouse"
+        },
+    },
+        apis: ["./docs/Products.yaml"]
+}
+    
+const spec = swaggerJsDoc(options);
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(spec));
+
+
 
 server.listen(PORT, () => {
     logger.info(`Servidor escuchando en http://localhost:${PORT}`);
