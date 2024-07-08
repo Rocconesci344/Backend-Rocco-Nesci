@@ -18,7 +18,7 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
 
 
-const PORT = 3000;
+const PORT = 8080;
 const app = express();
 const server = http.createServer(app)
 
@@ -63,7 +63,7 @@ const options = {
         info:{
             title: "API de Coderhousse",
             version: "1.0.0",
-            description: "API de Backend para el curso de Coderhouse"
+            description: "API de Backend Coderhouse"
         },
     },
         apis: ["./docs/Products.yaml"]
